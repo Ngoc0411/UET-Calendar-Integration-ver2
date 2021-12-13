@@ -51,5 +51,5 @@ curl --location --request GET 'http://localhost:8080/api/test/admin' \
 --header 'Authorization: Bearer eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJuZ29jcHYiLCJpYXQiOjE2MzkzOTIwMDQsImV4cCI6MTYzOTQ3ODQwNH0.4sdxdX43t_KINsHPe0R8CGJsI4EWAsuBoFlp2fx9W52v4m1lSKmiGU2fSkEhq9-3R1H0y3ojc2l7D-03mXumPg' \
 --header 'Cookie: JSESSIONID=275643686A1E327FDC937AF044C8DDD9'
 ```
-=> API /user, /admin truy cập được
+=> API /user, /admin truy cập được  
 => API /mod không thể truy cập
