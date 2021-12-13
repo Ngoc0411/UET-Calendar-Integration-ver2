@@ -11,6 +11,7 @@ Docs: https://drive.google.com/drive/folders/10NJvz2xErLEeGMYUXACltZFDuI2XaAdQ?u
 
 Đăng kí tài khoản:
 
+```sh
 curl --location --request POST 'http://localhost:8080/api/auth/signup' \
 --header 'Content-Type: application/json' \
 --header 'Cookie: JSESSIONID=275643686A1E327FDC937AF044C8DDD9' \
@@ -19,6 +20,7 @@ curl --location --request POST 'http://localhost:8080/api/auth/signup' \
     "password": "123456",
     "role": ["user", "admin"]
 }'
+```
 => Bảng users có thêm dữ liệu.
 
 Đăng nhập:
