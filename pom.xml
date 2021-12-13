@@ -1,0 +1,259 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd" xmlns="http://maven.apache.org/POM/4.0.0"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+  <modelVersion>4.0.0</modelVersion>
+  <groupId>com.mycompany.fuse.online.extensions</groupId>
+  <artifactId>custom-step-camel</artifactId>
+  <version>1.0.0</version>
+  <name>Fuse Online Custom Step Log Message Body</name>
+  <description>Logs a message body with a prefix</description>
+  <properties>
+    <maven.compiler.target>1.8</maven.compiler.target>
+    <java.version>1.8</java.version>
+    <maven.compiler.source>1.8</maven.compiler.source>
+    <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+    <maven-compiler-plugin.version>3.7.0</maven-compiler-plugin.version>
+    <syndesis.version>1.9.0.fuse-760020-redhat-00001</syndesis.version>
+    <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
+  </properties>
+  <dependencyManagement>
+    <dependencies>
+      <dependency>
+        <groupId>io.syndesis.extension</groupId>
+        <artifactId>extension-bom</artifactId>
+        <version>${syndesis.version}</version>
+        <type>pom</type>
+        <scope>import</scope>
+      </dependency>
+    </dependencies>
+  </dependencyManagement>
+  <dependencies>
+    <dependency>
+      <groupId>io.syndesis.extension</groupId>
+      <artifactId>extension-annotation-processor</artifactId>
+      <optional>true</optional>
+    </dependency>
+    <dependency>
+      <groupId>io.syndesis.extension</groupId>
+      <artifactId>extension-api</artifactId>
+      <scope>provided</scope>
+    </dependency>
+    
+    <dependency>
+        <groupId>org.apache.camel</groupId>
+        <artifactId>camel-servlet-starter</artifactId>
+        <version>2.25.4</version>
+    </dependency>
+    <dependency>
+        <groupId>org.apache.camel</groupId>
+        <artifactId>camel-jackson-starter</artifactId>
+        <version>2.25.4</version>
+    </dependency>
+    <dependency>
+        <groupId>org.apache.camel</groupId>
+        <artifactId>camel-swagger-java-starter</artifactId>
+        <version>2.25.3</version>
+    </dependency>
+    <dependency>
+        <groupId>org.apache.camel</groupId>
+        <artifactId>camel-spring-boot-starter</artifactId>
+        <version>2.25.3</version>
+    </dependency>    
+    <dependency>
+        <groupId>org.springframework.boot</groupId>
+        <artifactId>spring-boot-starter-web</artifactId>
+        <version>2.6.1</version>
+    </dependency>
+    
+    
+    <dependency>
+		<groupId>org.springframework.boot</groupId>
+		<artifactId>spring-boot-starter-data-jpa</artifactId>
+	</dependency>
+
+	<dependency>
+		<groupId>org.springframework.boot</groupId>
+		<artifactId>spring-boot-starter-security</artifactId>
+	</dependency>
+	
+	<dependency>
+		<groupId>org.springframework.boot</groupId>
+		<artifactId>spring-boot-starter-web</artifactId>
+	</dependency>
+	
+	<dependency>
+		<groupId>io.jsonwebtoken</groupId>
+		<artifactId>jjwt</artifactId>
+		<version>0.9.1</version>
+	</dependency>
+	
+	<dependency>
+            <groupId>mysql</groupId>
+            <artifactId>mysql-connector-java</artifactId>
+            <scope>runtime</scope>
+        </dependency>
+
+        <dependency>
+            <groupId>javax.validation</groupId>
+            <artifactId>validation-api</artifactId>
+            <version>2.0.1.Final</version>
+        </dependency>
+    
+    <dependency>
+	    <groupId>com.googlecode.json-simple</groupId>
+	    <artifactId>json-simple</artifactId>
+	    <version>1.1</version>
+	</dependency>
+    
+    
+    <dependency>
+      <groupId>org.apache.camel</groupId>
+      <artifactId>camel-core</artifactId>
+    </dependency>
+    <!-- https://mvnrepository.com/artifact/com.google.apis/google-api-services-gmail -->
+	<dependency>
+	    <groupId>com.google.apis</groupId>
+	    <artifactId>google-api-services-gmail</artifactId>
+	    <version>v1-rev83-1.23.0</version>
+	</dependency>
+    <!-- https://mvnrepository.com/artifact/org.mnode.ical4j/ical4j -->
+	<dependency>
+	    <groupId>org.mnode.ical4j</groupId>
+	    <artifactId>ical4j</artifactId>
+	    <version>3.1.1</version>
+	</dependency>
+	<!-- https://mvnrepository.com/artifact/commons-io/commons-io -->
+	<dependency>
+	    <groupId>commons-io</groupId>
+	    <artifactId>commons-io</artifactId>
+	    <version>2.6</version>
+	</dependency>
+	<dependency>
+	    <groupId>com.microsoft.azure</groupId>
+	    <artifactId>msal4j</artifactId>
+	    <version>1.11.0</version>
+	</dependency>
+	<dependency>
+     <groupId>com.google.api-client</groupId>
+     <artifactId>google-api-client</artifactId>
+     <version>1.31.5</version>
+   </dependency>
+	<dependency>
+	    <groupId>org.apache.camel</groupId>
+	    <artifactId>camel-gson</artifactId>
+	</dependency>
+	<dependency>
+	  <groupId>org.apache.camel</groupId>
+	  <artifactId>camel-jetty</artifactId>
+	</dependency>
+	<dependency>
+	    <groupId>org.apache.camel</groupId>
+	    <artifactId>camel-jackson</artifactId>
+	</dependency>
+    <dependency>
+	    <groupId>org.apache.camel</groupId>
+	    <artifactId>camel-http</artifactId>
+	</dependency>
+    <dependency>
+      <groupId>org.apache.camel</groupId>
+      <artifactId>camel-test</artifactId>
+      <scope>test</scope>
+    </dependency>
+    <dependency>
+      <groupId>org.slf4j</groupId>
+      <artifactId>slf4j-api</artifactId>
+    </dependency>
+    <dependency>
+      <groupId>org.slf4j</groupId>
+      <artifactId>slf4j-log4j12</artifactId>
+    </dependency>
+    <dependency>
+      <groupId>log4j</groupId>
+      <artifactId>log4j</artifactId>
+    </dependency>
+    <dependency>
+    	<groupId>com.google.apis</groupId>
+    	<artifactId>google-api-services-calendar</artifactId>
+    	<version>v3-rev411-1.25.0</version>
+    </dependency>
+    
+    
+    
+    
+    
+  </dependencies>
+  <repositories>
+    <repository>
+      <releases>
+        <enabled>true</enabled>
+      </releases>
+      <snapshots>
+        <enabled>false</enabled>
+      </snapshots>
+      <id>redhat-ga</id>
+      <name>Red Hat Release Repository</name>
+      <url>https://maven.repository.redhat.com/ga</url>
+    </repository>
+  </repositories>
+  <pluginRepositories>
+    <pluginRepository>
+      <releases>
+        <enabled>true</enabled>
+      </releases>
+      <snapshots>
+        <enabled>false</enabled>
+      </snapshots>
+      <id>redhat-ga</id>
+      <name>Red Hat Release Repository</name>
+      <url>https://maven.repository.redhat.com/ga</url>
+    </pluginRepository>
+  </pluginRepositories>
+  <build>
+  
+    <plugins>
+    
+    
+      <plugin>
+        <artifactId>maven-compiler-plugin</artifactId>
+        <version>${maven-compiler-plugin.version}</version>
+        <configuration>
+          <source>${java.version}</source>
+          <target>${java.version}</target>
+        </configuration>
+      </plugin>
+      <plugin>
+        <groupId>io.syndesis.extension</groupId>
+        <artifactId>extension-maven-plugin</artifactId>
+        <version>${syndesis.version}</version>
+        <executions>
+          <execution>
+            <goals>
+              <goal>generate-metadata</goal>
+              <goal>repackage-extension</goal>
+            </goals>
+          </execution>
+        </executions>
+      </plugin>
+      <plugin>
+        <artifactId>maven-enforcer-plugin</artifactId>
+        <version>3.0.0-M2</version>
+        <executions>
+          <execution>
+            <id>enforce-maven</id>
+            <goals>
+              <goal>enforce</goal>
+            </goals>
+            <configuration>
+              <rules>
+                <requireMavenVersion>
+                  <version>[3.5,3.6)</version>
+                  <message>The Maven version must be a 3.5.x version to work correctly. If using the embedded Maven in Eclipse, which defaults to 3.6.x, you must configure a specific 3.5.x Maven instance manually. See https://issues.jboss.org/browse/FUSETOOLS-3249 for more details.</message>
+                </requireMavenVersion>
+              </rules>
+            </configuration>
+          </execution>
+        </executions>
+      </plugin>
+    </plugins>
+  </build>
+</project>
