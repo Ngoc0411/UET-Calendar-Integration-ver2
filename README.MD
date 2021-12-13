@@ -1,4 +1,4 @@
-### Các bước để có thể chạy chương trình:
+## Các bước để có thể chạy chương trình:
 
 Docs: https://drive.google.com/drive/folders/10NJvz2xErLEeGMYUXACltZFDuI2XaAdQ?usp=sharing
 
@@ -8,8 +8,8 @@ Docs: https://drive.google.com/drive/folders/10NJvz2xErLEeGMYUXACltZFDuI2XaAdQ?u
 
 3. Run Application
 
-### Sử dụng API
-## Đăng kí tài khoản:
+## Sử dụng API
+### Đăng kí tài khoản:
 
 ```sh
 curl --location --request POST 'http://localhost:8080/api/auth/signup' \
@@ -23,7 +23,7 @@ curl --location --request POST 'http://localhost:8080/api/auth/signup' \
 ```
 => Bảng users có thêm dữ liệu.
 
-## Đăng nhập:
+### Đăng nhập:
 
 ```sh
 curl --location --request POST 'http://localhost:8080/api/auth/signin' \
@@ -35,7 +35,7 @@ curl --location --request POST 'http://localhost:8080/api/auth/signin' \
 }'
 ```
 
-## Sử dụng API được phân quyền - API trong TestController:
+### Sử dụng API được phân quyền - API trong TestController:
 
 ```sh
 curl --location --request GET 'http://localhost:8080/api/test/user' \
