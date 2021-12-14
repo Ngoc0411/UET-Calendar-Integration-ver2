@@ -2,7 +2,7 @@
 
 Docs: https://drive.google.com/drive/folders/10NJvz2xErLEeGMYUXACltZFDuI2XaAdQ?usp=sharing
 
-1. Tạo cơ sở dữ liệu
+1. Tạo cơ sở dữ liệu (Câu lệnh tạo bảng ở Docs trên)
 
 2. Sửa application.properties
 
