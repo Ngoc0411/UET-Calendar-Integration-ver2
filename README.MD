@@ -6,7 +6,7 @@ Docs: https://drive.google.com/drive/folders/10NJvz2xErLEeGMYUXACltZFDuI2XaAdQ?u
 
 2. Sửa application.properties
 
-3. Run Application
+3. Run Application (com.team2)
 
 ## Sử dụng API
 ### Đăng kí tài khoản:
