@@ -17,11 +17,12 @@ import org.apache.camel.component.jackson.JacksonDataFormat;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
 import org.json.simple.parser.ParseException;
+import org.springframework.stereotype.Component;
 
 import com.team2.model.MyEvent;
 import com.team2.model.UetExportToken;
 
-
+@Component
 public class UetCoursesCalendarRoute extends RouteBuilder {
 	
 	// TODO: Fill this function

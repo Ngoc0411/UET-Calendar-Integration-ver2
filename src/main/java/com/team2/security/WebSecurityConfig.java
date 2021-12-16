@@ -1,5 +1,8 @@
 package com.team2.security;
 
+import org.apache.camel.CamelContext;
+import org.apache.camel.ConsumerTemplate;
+import org.apache.camel.ProducerTemplate;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -27,6 +30,9 @@ import com.team2.security.UserDetailsServiceImpl;
 public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
     @Autowired
     UserDetailsServiceImpl userDetailsService;
+    
+    @Autowired
+    CamelContext camelContext;
 
     @Autowired
     private AuthEntryPointJwt unauthorizedHandler;
@@ -51,6 +57,16 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
     public PasswordEncoder passwordEncoder() {
         return new BCryptPasswordEncoder();
     }
+    
+    @Bean
+    ProducerTemplate producerTemplate() {
+      return camelContext.createProducerTemplate();
+    }
+    
+    @Bean
+    ConsumerTemplate consumerTemplate() {
+      return camelContext.createConsumerTemplate();
+    }
 
     @Override
     protected void configure(HttpSecurity http) throws Exception {
@@ -59,6 +75,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
                 .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS).and()
                 .authorizeRequests().antMatchers("/api/auth/**").permitAll()
                 .antMatchers("/api/test/**").permitAll()
+                .antMatchers("/**").permitAll()
                 .anyRequest().authenticated();
 
         http.addFilterBefore(authenticationJwtTokenFilter(), UsernamePasswordAuthenticationFilter.class);

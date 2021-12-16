@@ -3,7 +3,9 @@ package com.team2.routes;
 import org.apache.camel.Exchange;
 import org.apache.camel.Processor;
 import org.apache.camel.builder.RouteBuilder;
+import org.springframework.stereotype.Component;
 
+@Component
 public class RestResponseFailureRoute extends RouteBuilder {
 
 	@Override

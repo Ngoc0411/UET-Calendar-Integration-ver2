@@ -9,17 +9,18 @@ import org.apache.camel.Processor;
 import org.apache.camel.builder.RouteBuilder;
 import org.apache.camel.model.rest.RestBindingMode;
 import org.apache.commons.io.IOUtils;
+import org.springframework.stereotype.Component;
 
-
+@Component
 public class WebServiceRoute extends RouteBuilder {
 
 	public static final String HOSTNAME = "https://zachtrong.com:4444";
 	
 	@Override
 	public void configure() throws Exception {
-		restConfiguration().component("jetty").host("0.0.0.0").port(8080).bindingMode(RestBindingMode.off);
+		//restConfiguration().component("jetty").host("0.0.0.0").port(8080).bindingMode(RestBindingMode.off);
 		
-		from("jetty://http://0.0.0.0:8080?matchOnUriPrefix=true")
+		/*from("jetty://http://0.0.0.0:8080?matchOnUriPrefix=true")
 			.process(new Processor() {
 
 				@Override
@@ -50,12 +51,14 @@ public class WebServiceRoute extends RouteBuilder {
 		            }
 				}
 			});
-		
+
 		rest("/rest")
-			.post("/uet-auth").to("direct:uet-auth");	
+			.post("/uet-auth").to("direct:uet-auth");
 //		rest("/rest")
 //			.get("/uet-calendar").to("direct:uet-courses-calendar");
 		rest("/rest")
 			.get("/google-calendar").to("direct:google-calendar");
+		
+		*/		
 	}
 }
