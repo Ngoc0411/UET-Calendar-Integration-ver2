@@ -30,6 +30,4 @@ public class UetAuthToken {
 	public String toString() {
 		return "UetAuthToken [token=" + token + ", privateToken=" + privateToken + "]";
 	}
-	
-	
 }
