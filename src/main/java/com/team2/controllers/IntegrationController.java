@@ -49,7 +49,7 @@ public class IntegrationController {
     }
 
     @PostMapping("/google-auth")
-    public ResponseEntity<ServiceResult> registerUser(@Valid @RequestBody GoogleAuthToken googleAuthToken) {    	
+    public ResponseEntity<ServiceResult> updateGoogleAuthToken(@Valid @RequestBody GoogleAuthToken googleAuthToken) {    	
     	// save to database
     	ServiceResult sr = authService.saveGoogleAccount(producerTemplate, googleAuthToken);
 

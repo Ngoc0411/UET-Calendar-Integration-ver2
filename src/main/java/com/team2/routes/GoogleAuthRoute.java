@@ -5,6 +5,7 @@ import java.io.InputStream;
 import org.apache.camel.Exchange;
 import org.apache.camel.builder.RouteBuilder;
 import org.apache.camel.component.jackson.JacksonDataFormat;
+import org.springframework.stereotype.Component;
 
 import com.google.api.client.googleapis.auth.oauth2.GoogleAuthorizationCodeTokenRequest;
 import com.google.api.client.googleapis.auth.oauth2.GoogleClientSecrets;
@@ -15,6 +16,7 @@ import com.team2.model.GoogleAuthToken;
 import com.team2.model.UetAuthInfo;
 import com.team2.model.UetAuthToken;
 
+@Component
 public class GoogleAuthRoute extends RouteBuilder {
 	
 	private static final NetHttpTransport NET_HTTP_TRANSPORT = new NetHttpTransport();

@@ -14,7 +14,7 @@ import org.springframework.stereotype.Component;
 @Component
 public class WebServiceRoute extends RouteBuilder {
 
-	public static final String HOSTNAME = "https://zachtrong.com:4444";
+	public static final String HOSTNAME = "http://localhost:8080";
 	
 	@Override
 	public void configure() throws Exception {

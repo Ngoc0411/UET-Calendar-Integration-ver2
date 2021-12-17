@@ -16,11 +16,11 @@ public class GoogleAccount {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Size(max = 50)
+    @Size(max = 1500)
     @Column(name = "google_account")
     private String googleAccount;
     
-    @Size(max = 250)
+    @Size(max = 1550)
     @Column(name = "token")
     private String token;
 
@@ -31,15 +31,15 @@ public class GoogleAccount {
     @Column(name = "token_type")
     private String tokenType;
     
-    @Size(max = 200)
+    @Size(max = 1500)
     @Column(name = "scope")
     private String scope;
 
-    @Size(max = 120)
+    @Size(max = 1520)
     @Column(name = "refresh_token")
     private String refreshToken;
 
-    @Size(max = 120)
+    @Size(max = 1520)
     @Column(name = "code")
     private String code;
     
