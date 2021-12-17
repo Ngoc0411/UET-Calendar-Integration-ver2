@@ -3,11 +3,13 @@ package com.team2.routes;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
+import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.List;
 
 import org.apache.camel.builder.RouteBuilder;
 
+import com.google.api.client.googleapis.auth.oauth2.GoogleClientSecrets;
 import com.google.api.client.googleapis.auth.oauth2.GoogleCredential;
 import com.google.api.client.http.javanet.NetHttpTransport;
 import com.google.api.client.json.gson.GsonFactory;
@@ -21,6 +23,7 @@ import com.google.api.services.calendar.Calendar;
 import com.google.api.services.calendar.model.Event;
 import com.google.api.services.calendar.model.EventDateTime;
 import com.google.api.services.calendar.model.Events;
+import com.google.api.services.gmail.Gmail;
 import com.google.gson.Gson;
 
 import com.team2.model.MyEvent;
@@ -45,13 +48,24 @@ public class GoogleCalendarRoute extends RouteBuilder {
 	}
 	
 	
-	public static Calendar init_connection() throws Exception {
-		String accessToken = (String) getJSONObjectFile("./src/data/google_auth.json")
-				.get("access_token");
-		String refreshToken = (String) getJSONObjectFile("./src/data/google_auth.json")
-				.get("refresh_token");
-		GoogleCredential credential = new GoogleCredential().setAccessToken(accessToken);
-		Calendar service = new Calendar.Builder(NET_HTTP_TRANSPORT, GSON_FACTORY, credential)
+	public Calendar init_connection() throws Exception {
+		String accessToken = "ya29.a0ARrdaM9auCr7SDsKaT9d9hTs-mhj6i5amFyuMkep21rMJmjyqSKeTD34FfDFrpiLZsXcCqtjynEwYwmv6veeHD3Xg2OskAFhu2vjc9MyDu8Jk3JDqcaNEclM8msIOhsszL2Vvc5xXTon6RZAhXJdU5pz3s4Q";
+		String refreshToken = "1//0eYOiTu4V_LNwCgYIARAAGA4SNwF-L9IrdNVBD96Bf1OoccrXdylpEj-rkhvCONktUZdomrK1_XaGgi9drfHO2wMiT1IkW9u2IZA";
+
+		InputStream inputStream = this.getContext().getClassResolver().loadResourceAsStream(CLIENT_SECRET);
+		
+    	GoogleClientSecrets clientSecrets = GsonFactory.getDefaultInstance()
+    			.fromInputStream(inputStream, GoogleClientSecrets.class);
+    	
+		GoogleCredential c = new GoogleCredential.Builder()
+				.setTransport(NET_HTTP_TRANSPORT)
+				.setClientSecrets(clientSecrets)
+				.setJsonFactory(GSON_FACTORY)
+				.build()
+				.setAccessToken(accessToken)
+				.setRefreshToken(refreshToken);
+		
+		Calendar service = new Calendar.Builder(NET_HTTP_TRANSPORT, GSON_FACTORY, c)
 	            .setApplicationName(APPLICATION_NAME)
 	            .build();
 		return service;

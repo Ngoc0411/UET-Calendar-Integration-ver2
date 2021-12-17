@@ -19,9 +19,9 @@ import com.team2.model.UetAuthToken;
 @Component
 public class GoogleAuthRoute extends RouteBuilder {
 	
-	private static final NetHttpTransport NET_HTTP_TRANSPORT = new NetHttpTransport();
-	private static final GsonFactory GSON_FACTORY = GsonFactory.getDefaultInstance();
-    private static final String APPLICATION_NAME = "Google Auth";
+	public static final NetHttpTransport NET_HTTP_TRANSPORT = new NetHttpTransport();
+	public static final GsonFactory GSON_FACTORY = GsonFactory.getDefaultInstance();
+	public static final String APPLICATION_NAME = "Google Auth";
     public static final String CLIENT_SECRET = "client_secret_905434550263-fe4nhl3ec5u3r1tnkd77pq64053ddb6m.apps.googleusercontent.com.json";
 	
 	@Override
