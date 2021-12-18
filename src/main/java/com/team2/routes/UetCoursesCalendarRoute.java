@@ -8,6 +8,7 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
+import java.util.Optional;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -17,19 +18,22 @@ import org.apache.camel.component.jackson.JacksonDataFormat;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
 import org.json.simple.parser.ParseException;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Component;
 
+import com.team2.model.EventsEntity;
 import com.team2.model.MyEvent;
 import com.team2.model.UetCoursesAccount;
 import com.team2.model.UetExportToken;
+import com.team2.model.User;
+import com.team2.repository.EventRepository;
+import com.team2.security.UserDetailsImpl;
 
 @Component
 public class UetCoursesCalendarRoute extends RouteBuilder {
-	
-	// TODO: Fill this function
-	public static boolean check_event_exist(String event_id) {
-		return false;
-	}
+	@Autowired
+	EventRepository eventRepository;
 
 	@Override
 	public void configure() throws Exception {
@@ -60,29 +64,36 @@ public class UetCoursesCalendarRoute extends RouteBuilder {
 				String strIn = e.getIn().getBody(String.class);
 				
 				String[] arrayEvent = strIn.split("BEGIN:VEVENT");
-				List<MyEvent> listEvents = new ArrayList<>();
+				List<EventsEntity> listEvents = new ArrayList<>();
 				
+				//get user login:
+				UserDetailsImpl userDetails = (UserDetailsImpl) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+				Long userId = userDetails.getId();
 				
 				for(int i = 0; i < arrayEvent.length; i ++) {
 					if(arrayEvent[i].contains("METHOD:PUBLISH")) continue;
 					
-					String event_id = getValueByStringRegexFromEventUETCourses("UID:", arrayEvent[i]);
-					
-					if (check_event_exist(event_id)) {
-						continue;
-					}
-					
+					String eventId = getValueByStringRegexFromEventUETCourses("UID:", arrayEvent[i]);
 					String title = getValueByStringRegexFromEventUETCourses("SUMMARY:", arrayEvent[i]);
 //					String start = getValueByStringRegexFromEventUETCourses("DTSTART:", arrayEvent[i]);
 					String end = getValueByStringRegexFromEventUETCourses("DTEND:", arrayEvent[i]);
-					
-//					start = formatTimeFromEventUETCourses(start);
 					String _end = formatTimeFromEventUETCourses(end, 0);
 					String _start = formatTimeFromEventUETCourses(end, -1);
 					
-					MyEvent event = new MyEvent("Deadline: "+ title, _start, _end);
+					EventsEntity eventsExists = eventRepository.findByEventIdAndUserId(eventId, userId.intValue());
+					if(eventsExists != null) continue;
+					
+					EventsEntity event = new EventsEntity(eventId, "Deadline: "+ title, _start, _end, 1, userId.intValue());
+					
+					//save event to database
+					eventRepository.save(event);
+					
+					//add to list
 					listEvents.add(event);
+					
+					System.out.println(event.toString());
 				}
+				
 				e.getOut().setBody(listEvents);
 				e.getOut().setHeader("loop", listEvents.size());
 			})
