@@ -106,7 +106,7 @@ public class UetCoursesCalendarRoute extends RouteBuilder {
 				})
 				.to("direct:google-calendar-push-event")
 			.end()
-			.setBody(p -> "Synchonize with Google Calendar completed!!!")
+			.setBody(p -> "Synchonize UET with Google Calendar completed!!!")
 			.to("log:com.team2.routes?level=INFO");
 	}
 	
