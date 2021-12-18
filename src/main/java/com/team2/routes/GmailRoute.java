@@ -30,6 +30,7 @@ import org.json.simple.parser.ParseException;
 import org.springframework.stereotype.Component;
 
 import com.team2.model.MyEvent;
+import com.team2.model.GoogleAccount;
 
 @Component
 public class GmailRoute extends RouteBuilder {
@@ -94,9 +95,12 @@ public class GmailRoute extends RouteBuilder {
 	
 		from("direct:google-gmail")
 		.process(e -> {
-			String accessToken = "ya29.a0ARrdaM9auCr7SDsKaT9d9hTs-mhj6i5amFyuMkep21rMJmjyqSKeTD34FfDFrpiLZsXcCqtjynEwYwmv6veeHD3Xg2OskAFhu2vjc9MyDu8Jk3JDqcaNEclM8msIOhsszL2Vvc5xXTon6RZAhXJdU5pz3s4Q";
-			String refreshToken = "1//0eYOiTu4V_LNwCgYIARAAGA4SNwF-L9IrdNVBD96Bf1OoccrXdylpEj-rkhvCONktUZdomrK1_XaGgi9drfHO2wMiT1IkW9u2IZA";
+//			String accessToken = "ya29.a0ARrdaM9auCr7SDsKaT9d9hTs-mhj6i5amFyuMkep21rMJmjyqSKeTD34FfDFrpiLZsXcCqtjynEwYwmv6veeHD3Xg2OskAFhu2vjc9MyDu8Jk3JDqcaNEclM8msIOhsszL2Vvc5xXTon6RZAhXJdU5pz3s4Q";
+//			String refreshToken = "1//0eYOiTu4V_LNwCgYIARAAGA4SNwF-L9IrdNVBD96Bf1OoccrXdylpEj-rkhvCONktUZdomrK1_XaGgi9drfHO2wMiT1IkW9u2IZA";
 
+			String accessToken = e.getIn().getBody(GoogleAccount.class).getToken();
+			String refreshToken = e.getIn().getBody(GoogleAccount.class).getRefreshToken();
+			
 			InputStream inputStream = this.getContext().getClassResolver().loadResourceAsStream(CLIENT_SECRET);
 			
 	    	GoogleClientSecrets clientSecrets = GsonFactory.getDefaultInstance()
