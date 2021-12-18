@@ -52,9 +52,10 @@ public class UetCoursesCalendarRoute extends RouteBuilder {
 			.to("https://courses.uet.vnu.edu.vn/webservice/rest/server.php?moodlewsrestformat=json&bridgeEndpoint=true")
 			.unmarshal(new JacksonDataFormat(UetExportToken.class))
 			.setHeader(Exchange.HTTP_METHOD, constant(org.apache.camel.component.http.HttpMethods.GET))
+			.process(e -> e.getIn().setHeader("exporttoken", e.getIn().getBody(UetExportToken.class).getToken()))
 			.to("log:com.team2.routes?level=INFO")	
 			.setBody(p -> "")		
-			.toD("https://courses.uet.vnu.edu.vn/calendar/export_execute.php?userid=${header.userid}&authtoken=${header.wstoken}&preset_what=all&preset_time=monthnow&bridgeEndpoint=true")
+			.toD("https://courses.uet.vnu.edu.vn/calendar/export_execute.php?userid=${header.userid}&authtoken=${header.exporttoken}&preset_what=all&preset_time=monthnow&bridgeEndpoint=true")
 			.process(e -> {
 				String strIn = e.getIn().getBody(String.class);
 				
