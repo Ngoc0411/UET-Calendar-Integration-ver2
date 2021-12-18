@@ -43,7 +43,9 @@ public class GoogleAccount {
     @Column(name = "code")
     private String code;
     
-    
+    public GoogleAccount() {
+    	
+    }
 
 	public GoogleAccount(Long id, @Size(max = 50) String googleAccount, @Size(max = 250) String token, @Size(max = 120) String refreshToken, Long expiresIn,
 			@Size(max = 50) String tokenType, @Size(max = 200) String scope, @Size(max = 120) String code) {

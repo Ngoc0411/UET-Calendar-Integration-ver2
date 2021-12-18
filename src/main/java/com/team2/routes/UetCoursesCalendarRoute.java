@@ -20,6 +20,7 @@ import org.json.simple.parser.ParseException;
 import org.springframework.stereotype.Component;
 
 import com.team2.model.MyEvent;
+import com.team2.model.UetCoursesAccount;
 import com.team2.model.UetExportToken;
 
 @Component
@@ -39,26 +40,21 @@ public class UetCoursesCalendarRoute extends RouteBuilder {
 		
 		
 		from("direct:uet-courses-calendar")
+			.process(e -> e.getIn().setHeader("userid", String.valueOf(e.getIn().getBody(UetCoursesAccount.class).getUserid())))
+			.process(e -> e.getIn().setHeader("wstoken", e.getIn().getBody(UetCoursesAccount.class).getToken()))
 			.setHeader(Exchange.HTTP_METHOD, constant(org.apache.camel.component.http.HttpMethods.POST))
 			.setHeader(Exchange.CONTENT_TYPE, constant("application/x-www-form-urlencoded"))
 			
 			.process(e -> 
-					e.getIn().setBody("wstoken=" + (String) getJSONObjectFile("./src/data/uet_auth_token.json")
-									.get("token") + "&wsfunction=core_calendar_get_calendar_export_token"))
+					e.getIn().setBody("wstoken=" + e.getIn().getHeader("wstoken") 
+							+ "&wsfunction=core_calendar_get_calendar_export_token"))
 			
 			.to("https://courses.uet.vnu.edu.vn/webservice/rest/server.php?moodlewsrestformat=json&bridgeEndpoint=true")
 			.unmarshal(new JacksonDataFormat(UetExportToken.class))
-			.process(e -> 
-			{
-				int userid = ((Long) getJSONObjectFile("./src/data/uet_auth_info.json")
-						.get("userid")).intValue();
-				e.getIn().setHeader("exporttoken", e.getIn().getBody(UetExportToken.class).getToken());
-				e.getIn().setHeader("userid", userid);
-			})	
 			.setHeader(Exchange.HTTP_METHOD, constant(org.apache.camel.component.http.HttpMethods.GET))
 			.to("log:com.team2.routes?level=INFO")	
 			.setBody(p -> "")		
-			.toD("https://courses.uet.vnu.edu.vn/calendar/export_execute.php?userid=${header.userid}&authtoken=${header.exporttoken}&preset_what=all&preset_time=monthnow&bridgeEndpoint=true")
+			.toD("https://courses.uet.vnu.edu.vn/calendar/export_execute.php?userid=${header.userid}&authtoken=${header.wstoken}&preset_what=all&preset_time=monthnow&bridgeEndpoint=true")
 			.process(e -> {
 				String strIn = e.getIn().getBody(String.class);
 				

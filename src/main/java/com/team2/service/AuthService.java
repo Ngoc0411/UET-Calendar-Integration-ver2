@@ -29,7 +29,7 @@ import com.team2.security.JwtResponse;
 import com.team2.model.MessageResponse;
 import com.team2.repository.RoleRepository;
 import com.team2.repository.UserRepository;
-import com.team2.repository.GoogleAccountRespository;
+import com.team2.repository.GoogleAccountRepository;
 import com.team2.repository.UetCoursesRepository;
 import com.team2.security.JwtUtils;
 import com.team2.security.UserDetailsImpl;
@@ -65,7 +65,7 @@ public class AuthService {
     UetCoursesRepository uetCoursesRepository;
     
     @Autowired
-    GoogleAccountRespository googleAccountRepository;
+    GoogleAccountRepository googleAccountRepository;
 
     @Autowired
     PasswordEncoder encoder;

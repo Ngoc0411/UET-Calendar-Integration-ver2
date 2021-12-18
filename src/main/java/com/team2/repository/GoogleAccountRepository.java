@@ -7,6 +7,6 @@ import com.team2.model.GoogleAccount;
 import com.team2.model.UetCoursesAccount;
 
 @Repository
-public interface GoogleAccountRespository extends JpaRepository<GoogleAccount, Long>{
+public interface GoogleAccountRepository extends JpaRepository<GoogleAccount, Long>{
 
 }
