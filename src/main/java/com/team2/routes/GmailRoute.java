@@ -22,7 +22,6 @@ import com.google.api.client.json.gson.GsonFactory;
 import com.google.api.services.gmail.Gmail;
 import com.google.api.services.gmail.model.ListMessagesResponse;
 import com.google.api.services.gmail.model.Message;
-import com.google.gson.Gson;
 
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
@@ -31,7 +30,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import com.team2.model.MyEvent;
+import com.team2.model.UetCoursesAccount;
 import com.team2.repository.EventRepository;
+import com.team2.repository.UserRepository;
 import com.team2.model.EventsEntity;
 import com.team2.model.GoogleAccount;
 
@@ -45,6 +46,9 @@ public class GmailRoute extends RouteBuilder {
 	
 	@Autowired
 	EventRepository eventRepository;
+	
+	@Autowired
+	UserRepository userRepository;
 		
 	public static List<String> getDate(String mail) {
         Matcher m = Pattern.compile("(\\d{4}-\\d{1,2}-\\d{1,2})", Pattern.CASE_INSENSITIVE).matcher(mail);
@@ -102,6 +106,7 @@ public class GmailRoute extends RouteBuilder {
 
 			String accessToken = e.getIn().getBody(GoogleAccount.class).getToken();
 			String refreshToken = e.getIn().getBody(GoogleAccount.class).getRefreshToken();
+			Long google_id =  e.getIn().getBody(GoogleAccount.class).getId();
 			
 			InputStream inputStream = this.getContext().getClassResolver().loadResourceAsStream(CLIENT_SECRET);
 			
@@ -134,6 +139,7 @@ public class GmailRoute extends RouteBuilder {
 	        }
 	        
 	        List<EventsEntity> listEvents = new ArrayList<>();
+	        Long integrationUserId = userRepository.findByUsername(e.getIn().getHeader("integration_username").toString()).get().getId();
 		    
 		    if (messages.isEmpty()) {
 		        System.out.println("No messages found.");
@@ -145,20 +151,31 @@ public class GmailRoute extends RouteBuilder {
 		            // check event exists in db 
 		            // exists -> continue
 
-					//EventsEntity eventsExists = eventRepository.findByEventIdAndUserId(message.getId(), integrationUserId.intValue());
-					//if(eventsExists != null) continue;
+		            EventsEntity eventsExists = eventRepository.findByEventIdAndUserId(message.getId(), integrationUserId.intValue());
+					if(eventsExists != null) continue;
 
 		            List<String> dates = getDate(detail.getSnippet());
 		            if (dates.size() == 1) {
 		                String end_time = dates.get(0);
-		                EventsEntity event = new EventsEntity("Deadline from gmail ID " + message.getId(), formatTime(end_time, -1), formatTime(end_time, 0));
+		                EventsEntity event = new EventsEntity(message.getId(),"Deadline from gmail ID " + message.getId(), 
+		                		formatTime(end_time, -1), formatTime(end_time, 0),
+		                		2, integrationUserId.intValue());
+		                
+		                //save event to database
+						eventRepository.save(event);
+		                
 		                listEvents.add(event);
 		                // push to calendar
 		            }
 		            else if(dates.size() >= 2) {
 		                String start_time = dates.get(0);
 		                String end_time = dates.get(1);
-		                EventsEntity event = new EventsEntity("Deadline from gmail ID " + message.getId(), formatTime(end_time, -1), formatTime(end_time, 0));
+		                EventsEntity event = new EventsEntity(message.getId(),"Deadline from gmail ID " + message.getId(), 
+		                		formatTime(end_time, -1), formatTime(end_time, 0),
+		                		2, integrationUserId.intValue());
+		                //save event to database
+						eventRepository.save(event);
+		                
 		                listEvents.add(event);
 		                // push to calendar
 		            }

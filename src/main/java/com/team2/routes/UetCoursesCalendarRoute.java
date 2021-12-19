@@ -85,13 +85,13 @@ public class UetCoursesCalendarRoute extends RouteBuilder {
 					String _end = formatTimeFromEventUETCourses(end, 0);
 					String _start = formatTimeFromEventUETCourses(end, -1);
 					
-					EventsEntity eventsExists = eventRepository.findByEventIdAndUserId(eventId, integrationUserId.intValue());
-					if(eventsExists != null) continue;
+//					EventsEntity eventsExists = eventRepository.findByEventIdAndUserId(eventId, integrationUserId.intValue());
+//					if(eventsExists != null) continue;
 					
 					EventsEntity event = new EventsEntity(eventId, "Deadline: "+ title, _start, _end, 1, integrationUserId.intValue());
 					
 					//save event to database
-					eventRepository.save(event);
+//					eventRepository.save(event);
 					
 					//add to list
 					listEvents.add(event);
@@ -101,13 +101,16 @@ public class UetCoursesCalendarRoute extends RouteBuilder {
 				
 				e.getOut().setBody(listEvents);
 				e.getOut().setHeader("loop", listEvents.size());
+				e.getOut().setHeader("user_id", integrationUserId.intValue());
 			})
 			.loop(header("loop")).copy()
 				.process(e -> {
 					int i = (Integer) e.getProperty(Exchange.LOOP_INDEX);
+					int user_id = (int) e.getIn().getHeader("user_id");
 					List<EventsEntity> listEvents = e.getIn().getBody(List.class);
 					EventsEntity event = listEvents.get(i);
 					e.getOut().setBody(event);
+					e.getOut().setHeader("user_id", user_id);
 				})
 				.to("direct:google-calendar-push-event")
 			.end()

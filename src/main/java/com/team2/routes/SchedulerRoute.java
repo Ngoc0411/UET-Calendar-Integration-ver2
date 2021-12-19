@@ -47,14 +47,14 @@ public class SchedulerRoute extends RouteBuilder {
 						}
 					}
 					
-					if (user.getGoogle_id() != null) {
-						Optional<GoogleAccount> ga = gaRepository.findById(user.getGoogle_id());
-						if (ga.isPresent()) {
-							producerTemplate.start();
-							producerTemplate.sendBody("direct:google-gmail", ga.get());
-							producerTemplate.stop();
-						}
-					}
+//					if (user.getGoogle_id() != null) {
+//						Optional<GoogleAccount> ga = gaRepository.findById(user.getGoogle_id());
+//						if (ga.isPresent()) {
+//							producerTemplate.start();
+//							producerTemplate.sendBody("direct:google-gmail", user.getGoogle_id());
+//							producerTemplate.stop();
+//						}
+//					}
 				}
 			});
 	}
