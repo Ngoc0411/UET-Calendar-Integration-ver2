@@ -90,7 +90,7 @@ public class AuthService {
         	account.setPrivateToken(privateToken);
         	account.setUserid(Long.parseLong(userid));
         	account.setUsername(userDetails.getUsername());
-        	
+        	account.setIntegrationUserId(userDetails.getId());
         	account = uetCoursesRepository.save(account);
         	
         	Optional<User> user = userRepository.findById(userDetails.getId());
@@ -125,6 +125,7 @@ public class AuthService {
 	    	String code = gat.getCode();
 	    	
 	    	GoogleAccount account = new GoogleAccount(null,
+	    			userDetails.getId(),
 	    			tokenResponse.getIdToken(),
 	    			tokenResponse.getAccessToken(),
 	    			tokenResponse.getRefreshToken(),

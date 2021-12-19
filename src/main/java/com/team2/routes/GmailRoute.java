@@ -81,9 +81,6 @@ public class GmailRoute extends RouteBuilder {
 		}
 		String formattedDate = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss'Z'").format(timestamp);
 		return formattedDate;
-
-//        return year + "-" + month + "-" + day + " " + hour + ":" + minutes + ":" + second + ".0000";
-//        return year + "-" + month + "-" + day;
     }
 	
 	
@@ -97,9 +94,10 @@ public class GmailRoute extends RouteBuilder {
 	
 		from("direct:google-gmail")
 		.process(e -> {
-//			String accessToken = "ya29.a0ARrdaM9auCr7SDsKaT9d9hTs-mhj6i5amFyuMkep21rMJmjyqSKeTD34FfDFrpiLZsXcCqtjynEwYwmv6veeHD3Xg2OskAFhu2vjc9MyDu8Jk3JDqcaNEclM8msIOhsszL2Vvc5xXTon6RZAhXJdU5pz3s4Q";
-//			String refreshToken = "1//0eYOiTu4V_LNwCgYIARAAGA4SNwF-L9IrdNVBD96Bf1OoccrXdylpEj-rkhvCONktUZdomrK1_XaGgi9drfHO2wMiT1IkW9u2IZA";
-
+			
+			Long integrationUserId = e.getIn().getBody(GoogleAccount.class).getIntegrationUserId();
+			e.getIn().setHeader("integration_user_id", String.valueOf(integrationUserId));
+			
 			String accessToken = e.getIn().getBody(GoogleAccount.class).getToken();
 			String refreshToken = e.getIn().getBody(GoogleAccount.class).getRefreshToken();
 			
@@ -120,7 +118,7 @@ public class GmailRoute extends RouteBuilder {
 		            .setApplicationName(APPLICATION_NAME)
 		            .build();
 		    
-			// Recusively take UNREAD email only
+			// Recursively take UNREAD email only
 		    ListMessagesResponse response = service.users().messages().list("me").setQ("is:unread in:inbox").execute();
 	        List<Message> messages = new ArrayList<Message>();
 	        while (response.getMessages() != null) {
@@ -144,9 +142,6 @@ public class GmailRoute extends RouteBuilder {
 		            System.out.printf("- %s\n", detail.getSnippet());
 		            // check event exists in db 
 		            // exists -> continue
-
-					//EventsEntity eventsExists = eventRepository.findByEventIdAndUserId(message.getId(), integrationUserId.intValue());
-					//if(eventsExists != null) continue;
 
 		            List<String> dates = getDate(detail.getSnippet());
 		            if (dates.size() == 1) {
@@ -175,6 +170,7 @@ public class GmailRoute extends RouteBuilder {
 				int i = (Integer) e.getProperty(Exchange.LOOP_INDEX);
 				List<MyEvent> listEvents = e.getIn().getBody(List.class);
 				MyEvent event = listEvents.get(i);
+				e.getOut().setHeader("integration_user_id", e.getIn().getHeader("integration_user_id"));
 				e.getOut().setBody(event);
 			})
 			.to("direct:google-calendar-push-event")

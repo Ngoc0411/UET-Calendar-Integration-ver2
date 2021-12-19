@@ -63,11 +63,9 @@ public class GoogleCalendarRoute extends RouteBuilder {
 	}
 	
 	
-	public Calendar init_connection() throws Exception {
+	public Calendar init_connection(Long integrationUserId) throws Exception {
 		
-		// TODO replace userDetails with user id instead of from security context
-		UserDetailsImpl userDetails = (UserDetailsImpl) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-		Optional<User> user = userRepository.findById(userDetails.getId());
+		Optional<User> user = userRepository.findById(integrationUserId);
 		
 		Optional<GoogleAccount> ga = gaRepository.findById(user.get().getGoogle_id());
 		String accessToken = ga.get().getToken();
@@ -103,8 +101,10 @@ public class GoogleCalendarRoute extends RouteBuilder {
 		
 		from("direct:google-calendar-push-event")
 		.process(e -> {
+			Long integrationUserId = Long.valueOf(e.getIn().getHeader("integration_user_id").toString());
+			
 			System.out.println("START PUSHING EVENT TO CALENDAR");
-			Calendar service = init_connection();
+			Calendar service = init_connection(integrationUserId);
 			EventsEntity my_event = e.getIn().getBody(EventsEntity.class);
 			
 			Event event = new Event()
@@ -131,7 +131,8 @@ public class GoogleCalendarRoute extends RouteBuilder {
 		from("direct:google-calendar")
 		//.to("direct:google-gmail", "direct:uet-courses-calendar")
 		.process(e -> {
-			Calendar service = init_connection();
+			Long integrationUserId = Long.valueOf(e.getIn().getHeader("integration_user_id").toString());
+			Calendar service = init_connection(integrationUserId);
 
 			// List the next 10 events from the primary calendar.
 		    DateTime now = new DateTime(System.currentTimeMillis());
