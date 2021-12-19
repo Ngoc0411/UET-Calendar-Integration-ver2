@@ -51,10 +51,10 @@ public class GmailRoute extends RouteBuilder {
 	UserRepository userRepository;
 		
 	public static List<String> getDate(String mail) {
-        Matcher m = Pattern.compile("(\\d{4}-\\d{1,2}-\\d{1,2})", Pattern.CASE_INSENSITIVE).matcher(mail);
+        Matcher m = Pattern.compile("(\\d{1,2}[-/]\\d{1,2}[-/]\\d{4})", Pattern.CASE_INSENSITIVE).matcher(mail);
         List<String> dates = new ArrayList<String>();
         while (m.find()) {
-            dates.add(m.group(1));
+            dates.add(m.group(1).replaceAll("/", "-"));
 //            System.out.println(m.group(1));
         }
         return dates;
@@ -74,7 +74,7 @@ public class GmailRoute extends RouteBuilder {
 		
 	public static String formatTime(String time, int sub_hour) throws java.text.ParseException {
 		time = time + " 00-00-00";
-		SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH-mm-ss");
+		SimpleDateFormat dateFormat = new SimpleDateFormat("dd-MM-yyyy HH-mm-ss");
 		Date timestamp = dateFormat.parse(time);
 		
 		if (sub_hour != 0) {
@@ -155,7 +155,7 @@ public class GmailRoute extends RouteBuilder {
 		            List<String> dates = getDate(detail.getSnippet());
 		            if (dates.size() == 1) {
 		                String end_time = dates.get(0);
-		                EventsEntity event = new EventsEntity(message.getId(),"Deadline from gmail ID " + message.getId(), 
+		                EventsEntity event = new EventsEntity(message.getId(), detail.getSnippet().substring(0, Math.min(detail.getSnippet().length(), 64)) + "...", 
 		                		formatTime(end_time, -1), formatTime(end_time, 0),
 		                		2, integrationUserId.intValue());
 		                
@@ -165,10 +165,10 @@ public class GmailRoute extends RouteBuilder {
 		                listEvents.add(event);
 		                // push to calendar
 		            }
-		            else if(dates.size() >= 2) {
+		            else if (dates.size() >= 2) {
 		                String start_time = dates.get(0);
 		                String end_time = dates.get(1);
-		                EventsEntity event = new EventsEntity(message.getId(),"Deadline from gmail ID " + message.getId(), 
+		                EventsEntity event = new EventsEntity(message.getId(), detail.getSnippet().substring(0, Math.min(detail.getSnippet().length(), 64)) + "...", 
 		                		formatTime(end_time, -1), formatTime(end_time, 0),
 		                		2, integrationUserId.intValue());
 		                //save event to database
@@ -184,13 +184,15 @@ public class GmailRoute extends RouteBuilder {
 		    }
 		    e.getOut().setBody(listEvents);
 			e.getOut().setHeader("loop", listEvents.size());
+			e.getOut().setHeader("integration_user_id", integrationUserId.intValue());
 		})
 		.loop(header("loop")).copy()
 			.process(e -> {
 				int i = (Integer) e.getProperty(Exchange.LOOP_INDEX);
-				List<MyEvent> listEvents = e.getIn().getBody(List.class);
-				MyEvent event = listEvents.get(i);
-				e.getOut().setHeader("integration_user_id", e.getIn().getHeader("integration_user_id"));
+				int user_id = (int) e.getIn().getHeader("integration_user_id");
+				List<EventsEntity> listEvents = e.getIn().getBody(List.class);
+				EventsEntity event = listEvents.get(i);
+				e.getOut().setHeader("integration_user_id", user_id);
 				e.getOut().setBody(event);
 			})
 			.to("direct:google-calendar-push-event")
