@@ -26,7 +26,7 @@ public class EventService {
 
         	// retrieve user id
         	producerTemplate.start();
-        	String listEvents = (String) producerTemplate.requestBody("direct:google-calendar");
+        	String listEvents = producerTemplate.requestBody("direct:google-calendar", "", String.class);
         	producerTemplate.stop();
         	
         	return listEvents;

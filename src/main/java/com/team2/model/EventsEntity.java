@@ -35,6 +35,12 @@ public class EventsEntity {
     @Basic
     @Column(name = "event_id")
     private String eventId;
+    
+    public EventsEntity(String title, String start, String end) {
+    	this.title = title;
+    	this.start = start;
+    	this.end = end;
+    }
 
     public EventsEntity() {
 

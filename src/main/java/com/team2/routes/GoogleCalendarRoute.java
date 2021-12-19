@@ -28,6 +28,7 @@ import com.google.api.services.calendar.model.EventDateTime;
 import com.google.api.services.calendar.model.Events;
 import com.google.api.services.gmail.Gmail;
 import com.google.gson.Gson;
+import com.team2.model.EventsEntity;
 import com.team2.model.GoogleAccount;
 import com.team2.model.MyEvent;
 import com.team2.model.User;
@@ -64,6 +65,7 @@ public class GoogleCalendarRoute extends RouteBuilder {
 	
 	public Calendar init_connection() throws Exception {
 		
+		// TODO replace userDetails with user id instead of from security context
 		UserDetailsImpl userDetails = (UserDetailsImpl) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
 		Optional<User> user = userRepository.findById(userDetails.getId());
 		
@@ -71,9 +73,6 @@ public class GoogleCalendarRoute extends RouteBuilder {
 		String accessToken = ga.get().getToken();
 		String refreshToken = ga.get().getRefreshToken();
 		
-//		String accessToken = "ya29.a0ARrdaM9auCr7SDsKaT9d9hTs-mhj6i5amFyuMkep21rMJmjyqSKeTD34FfDFrpiLZsXcCqtjynEwYwmv6veeHD3Xg2OskAFhu2vjc9MyDu8Jk3JDqcaNEclM8msIOhsszL2Vvc5xXTon6RZAhXJdU5pz3s4Q";
-//		String refreshToken = "1//0eYOiTu4V_LNwCgYIARAAGA4SNwF-L9IrdNVBD96Bf1OoccrXdylpEj-rkhvCONktUZdomrK1_XaGgi9drfHO2wMiT1IkW9u2IZA";
-
 		InputStream inputStream = this.getContext().getClassResolver().loadResourceAsStream(CLIENT_SECRET);
 		
     	GoogleClientSecrets clientSecrets = GsonFactory.getDefaultInstance()
@@ -90,6 +89,7 @@ public class GoogleCalendarRoute extends RouteBuilder {
 		Calendar service = new Calendar.Builder(NET_HTTP_TRANSPORT, GSON_FACTORY, c)
 	            .setApplicationName(APPLICATION_NAME)
 	            .build();
+		
 		return service;
 	}
 	
@@ -105,7 +105,7 @@ public class GoogleCalendarRoute extends RouteBuilder {
 		.process(e -> {
 			System.out.println("START PUSHING EVENT TO CALENDAR");
 			Calendar service = init_connection();
-			MyEvent my_event = e.getIn().getBody(MyEvent.class);
+			EventsEntity my_event = e.getIn().getBody(EventsEntity.class);
 			
 			Event event = new Event()
 				    .setSummary(my_event.getTitle());
@@ -129,7 +129,7 @@ public class GoogleCalendarRoute extends RouteBuilder {
 	
 	
 		from("direct:google-calendar")
-		.to("direct:google-gmail", "direct:uet-courses-calendar")
+		//.to("direct:google-gmail", "direct:uet-courses-calendar")
 		.process(e -> {
 			Calendar service = init_connection();
 
@@ -156,7 +156,7 @@ public class GoogleCalendarRoute extends RouteBuilder {
 		            if (end == null) {
 		                end = event.getStart().getDate();
 		            }
-		            MyEvent _event = new MyEvent(event.getSummary(), start.toString().split("T")[0], end.toString().split("T")[0]);
+		            EventsEntity _event = new EventsEntity(event.getSummary(), start.toString().split("T")[0], end.toString().split("T")[0]);
 	                Gson gson = new Gson();
 					String jsonObjectEvent = gson.toJson(_event);
 	                listEvents.add(jsonObjectEvent);

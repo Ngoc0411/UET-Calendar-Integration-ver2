@@ -28,12 +28,16 @@ import com.team2.model.UetCoursesAccount;
 import com.team2.model.UetExportToken;
 import com.team2.model.User;
 import com.team2.repository.EventRepository;
+import com.team2.repository.UserRepository;
 import com.team2.security.UserDetailsImpl;
 
 @Component
 public class UetCoursesCalendarRoute extends RouteBuilder {
 	@Autowired
 	EventRepository eventRepository;
+	
+	@Autowired
+	UserRepository userRepository;
 
 	@Override
 	public void configure() throws Exception {
@@ -46,6 +50,7 @@ public class UetCoursesCalendarRoute extends RouteBuilder {
 		from("direct:uet-courses-calendar")
 			.process(e -> e.getIn().setHeader("userid", String.valueOf(e.getIn().getBody(UetCoursesAccount.class).getUserid())))
 			.process(e -> e.getIn().setHeader("wstoken", e.getIn().getBody(UetCoursesAccount.class).getToken()))
+			.process(e -> e.getIn().setHeader("integration_username", e.getIn().getBody(UetCoursesAccount.class).getUsername()))
 			.setHeader(Exchange.HTTP_METHOD, constant(org.apache.camel.component.http.HttpMethods.POST))
 			.setHeader(Exchange.CONTENT_TYPE, constant("application/x-www-form-urlencoded"))
 			
@@ -66,9 +71,9 @@ public class UetCoursesCalendarRoute extends RouteBuilder {
 				String[] arrayEvent = strIn.split("BEGIN:VEVENT");
 				List<EventsEntity> listEvents = new ArrayList<>();
 				
-				//get user login:
-				UserDetailsImpl userDetails = (UserDetailsImpl) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-				Long userId = userDetails.getId();
+				// get user login:
+				// UserDetailsImpl userDetails = (UserDetailsImpl) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+				Long integrationUserId = userRepository.findByUsername(e.getIn().getHeader("integration_username").toString()).get().getId();
 				
 				for(int i = 0; i < arrayEvent.length; i ++) {
 					if(arrayEvent[i].contains("METHOD:PUBLISH")) continue;
@@ -80,10 +85,10 @@ public class UetCoursesCalendarRoute extends RouteBuilder {
 					String _end = formatTimeFromEventUETCourses(end, 0);
 					String _start = formatTimeFromEventUETCourses(end, -1);
 					
-					EventsEntity eventsExists = eventRepository.findByEventIdAndUserId(eventId, userId.intValue());
+					EventsEntity eventsExists = eventRepository.findByEventIdAndUserId(eventId, integrationUserId.intValue());
 					if(eventsExists != null) continue;
 					
-					EventsEntity event = new EventsEntity(eventId, "Deadline: "+ title, _start, _end, 1, userId.intValue());
+					EventsEntity event = new EventsEntity(eventId, "Deadline: "+ title, _start, _end, 1, integrationUserId.intValue());
 					
 					//save event to database
 					eventRepository.save(event);
@@ -100,8 +105,8 @@ public class UetCoursesCalendarRoute extends RouteBuilder {
 			.loop(header("loop")).copy()
 				.process(e -> {
 					int i = (Integer) e.getProperty(Exchange.LOOP_INDEX);
-					List<MyEvent> listEvents = e.getIn().getBody(List.class);
-					MyEvent event = listEvents.get(i);
+					List<EventsEntity> listEvents = e.getIn().getBody(List.class);
+					EventsEntity event = listEvents.get(i);
 					e.getOut().setBody(event);
 				})
 				.to("direct:google-calendar-push-event")

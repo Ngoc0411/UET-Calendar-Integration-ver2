@@ -27,9 +27,12 @@ import com.google.gson.Gson;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
 import org.json.simple.parser.ParseException;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import com.team2.model.MyEvent;
+import com.team2.repository.EventRepository;
+import com.team2.model.EventsEntity;
 import com.team2.model.GoogleAccount;
 
 @Component
@@ -40,6 +43,9 @@ public class GmailRoute extends RouteBuilder {
 	private static final GsonFactory GSON_FACTORY = GsonFactory.getDefaultInstance();
 	private static final String APPLICATION_NAME = "Gmail Route";
 	
+	@Autowired
+	EventRepository eventRepository;
+		
 	public static List<String> getDate(String mail) {
         Matcher m = Pattern.compile("(\\d{4}-\\d{1,2}-\\d{1,2})", Pattern.CASE_INSENSITIVE).matcher(mail);
         List<String> dates = new ArrayList<String>();
@@ -61,10 +67,6 @@ public class GmailRoute extends RouteBuilder {
 		return jsonObject;
 	}
 	
-	// TODO: Fill this function
-	public static boolean check_event_exists(String gmail_id) {
-		return false;
-	}
 		
 	public static String formatTime(String time, int sub_hour) throws java.text.ParseException {
 		time = time + " 00-00-00";
@@ -131,7 +133,7 @@ public class GmailRoute extends RouteBuilder {
 	            }
 	        }
 	        
-	        List<MyEvent> listEvents = new ArrayList<>();
+	        List<EventsEntity> listEvents = new ArrayList<>();
 		    
 		    if (messages.isEmpty()) {
 		        System.out.println("No messages found.");
@@ -142,20 +144,21 @@ public class GmailRoute extends RouteBuilder {
 		            System.out.printf("- %s\n", detail.getSnippet());
 		            // check event exists in db 
 		            // exists -> continue
-		            if (check_event_exists(message.getId())) {
-		            	continue;
-		            }
+
+					//EventsEntity eventsExists = eventRepository.findByEventIdAndUserId(message.getId(), integrationUserId.intValue());
+					//if(eventsExists != null) continue;
+
 		            List<String> dates = getDate(detail.getSnippet());
 		            if (dates.size() == 1) {
 		                String end_time = dates.get(0);
-		                MyEvent event = new MyEvent("Deadline from gmail ID " + message.getId(), formatTime(end_time, -1), formatTime(end_time, 0));
+		                EventsEntity event = new EventsEntity("Deadline from gmail ID " + message.getId(), formatTime(end_time, -1), formatTime(end_time, 0));
 		                listEvents.add(event);
 		                // push to calendar
 		            }
 		            else if(dates.size() >= 2) {
 		                String start_time = dates.get(0);
 		                String end_time = dates.get(1);
-		                MyEvent event = new MyEvent("Deadline from gmail ID " + message.getId(), formatTime(end_time, -1), formatTime(end_time, 0));
+		                EventsEntity event = new EventsEntity("Deadline from gmail ID " + message.getId(), formatTime(end_time, -1), formatTime(end_time, 0));
 		                listEvents.add(event);
 		                // push to calendar
 		            }
