@@ -6,6 +6,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 import org.apache.camel.builder.RouteBuilder;
 
@@ -16,6 +17,8 @@ import com.google.api.client.json.gson.GsonFactory;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
 import org.json.simple.parser.ParseException;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Component;
 
 import com.google.api.client.util.DateTime;
@@ -25,11 +28,22 @@ import com.google.api.services.calendar.model.EventDateTime;
 import com.google.api.services.calendar.model.Events;
 import com.google.api.services.gmail.Gmail;
 import com.google.gson.Gson;
-
+import com.team2.model.GoogleAccount;
 import com.team2.model.MyEvent;
+import com.team2.model.User;
+import com.team2.repository.GoogleAccountRepository;
+import com.team2.repository.UserRepository;
+import com.team2.security.UserDetailsImpl;
 
 @Component
 public class GoogleCalendarRoute extends RouteBuilder {
+	
+	@Autowired
+	GoogleAccountRepository gaRepository;
+	
+	@Autowired
+    UserRepository userRepository;
+	
 	public static final String CLIENT_ID = "905434550263-fe4nhl3ec5u3r1tnkd77pq64053ddb6m.apps.googleusercontent.com";
 	public static final String CLIENT_SECRET = "client_secret_905434550263-fe4nhl3ec5u3r1tnkd77pq64053ddb6m.apps.googleusercontent.com.json";
 	private static final NetHttpTransport NET_HTTP_TRANSPORT = new NetHttpTransport();
@@ -49,8 +63,16 @@ public class GoogleCalendarRoute extends RouteBuilder {
 	
 	
 	public Calendar init_connection() throws Exception {
-		String accessToken = "ya29.a0ARrdaM9auCr7SDsKaT9d9hTs-mhj6i5amFyuMkep21rMJmjyqSKeTD34FfDFrpiLZsXcCqtjynEwYwmv6veeHD3Xg2OskAFhu2vjc9MyDu8Jk3JDqcaNEclM8msIOhsszL2Vvc5xXTon6RZAhXJdU5pz3s4Q";
-		String refreshToken = "1//0eYOiTu4V_LNwCgYIARAAGA4SNwF-L9IrdNVBD96Bf1OoccrXdylpEj-rkhvCONktUZdomrK1_XaGgi9drfHO2wMiT1IkW9u2IZA";
+		
+		UserDetailsImpl userDetails = (UserDetailsImpl) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+		Optional<User> user = userRepository.findById(userDetails.getId());
+		
+		Optional<GoogleAccount> ga = gaRepository.findById(user.get().getGoogle_id());
+		String accessToken = ga.get().getToken();
+		String refreshToken = ga.get().getRefreshToken();
+		
+//		String accessToken = "ya29.a0ARrdaM9auCr7SDsKaT9d9hTs-mhj6i5amFyuMkep21rMJmjyqSKeTD34FfDFrpiLZsXcCqtjynEwYwmv6veeHD3Xg2OskAFhu2vjc9MyDu8Jk3JDqcaNEclM8msIOhsszL2Vvc5xXTon6RZAhXJdU5pz3s4Q";
+//		String refreshToken = "1//0eYOiTu4V_LNwCgYIARAAGA4SNwF-L9IrdNVBD96Bf1OoccrXdylpEj-rkhvCONktUZdomrK1_XaGgi9drfHO2wMiT1IkW9u2IZA";
 
 		InputStream inputStream = this.getContext().getClassResolver().loadResourceAsStream(CLIENT_SECRET);
 		

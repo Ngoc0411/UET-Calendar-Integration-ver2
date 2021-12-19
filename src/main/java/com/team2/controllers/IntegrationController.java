@@ -24,6 +24,7 @@ import com.team2.model.UetAuthRequest;
 import com.team2.model.UetAuthToken;
 import com.team2.model.UetCoursesAccount;
 import com.team2.service.AuthService;
+import com.team2.service.EventService;
 import com.team2.service.ServiceResult;
 
 @CrossOrigin(origins = "*", maxAge = 3600)
@@ -33,6 +34,9 @@ public class IntegrationController {
 
     @Autowired
     AuthService authService;
+    
+    @Autowired
+    EventService eventService;
     
     @Autowired
     ProducerTemplate producerTemplate;
@@ -57,4 +61,11 @@ public class IntegrationController {
             new ResponseEntity<ServiceResult>(sr, HttpStatus.OK);
     }
 
+    @PostMapping("/get-calendars-from-google-calendars")
+    @ResponseBody
+    public String getEventsFromGGCalendars() {
+    	String listEvents = eventService.getEventsFromGGCalendars(producerTemplate);
+        return listEvents;
+
+    }
 }
