@@ -161,7 +161,8 @@ public class GoogleCalendarRoute extends RouteBuilder {
 	            }
 	        }
 		   
-		    List<String> listEvents = new ArrayList<>();
+		    List<EventsEntity> listEvents = new ArrayList<>();
+		    
 		    if (items.isEmpty()) {
 		        System.out.println("No upcoming events found.");
 		    } else {
@@ -176,13 +177,10 @@ public class GoogleCalendarRoute extends RouteBuilder {
 		                end = event.getStart().getDate();
 		            }
 		            EventsEntity _event = new EventsEntity(event.getSummary(), start.toString().split("T")[0], end.toString().split("T")[0]);
-	                Gson gson = new Gson();
-					String jsonObjectEvent = gson.toJson(_event);
-	                listEvents.add(jsonObjectEvent);
-	                
+	                listEvents.add(_event);
 		        }     
-		        e.getOut().setBody(listEvents);
 		    }
+	        e.getOut().setBody(listEvents);
 		})
 		.to("log:com.team2.routes?level=INFO");
 	}
