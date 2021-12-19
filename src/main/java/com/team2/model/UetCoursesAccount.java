@@ -25,6 +25,9 @@ public class UetCoursesAccount {
     
     @Size(max = 120)
     private String token;
+    
+    @Column(name = "integration_user_id")
+    private Long integrationUserId;
 
     @Size(max = 120)
     @Column(name = "private_token")
@@ -69,4 +72,12 @@ public class UetCoursesAccount {
     public void setPrivateToken(String privateToken) {
     	this.privateToken = privateToken;
     }
+
+	public Long getIntegrationUserId() {
+		return integrationUserId;
+	}
+
+	public void setIntegrationUserId(Long integrationUserId) {
+		this.integrationUserId = integrationUserId;
+	}   
 }

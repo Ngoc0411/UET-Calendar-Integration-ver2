@@ -68,4 +68,14 @@ public class IntegrationController {
         return listEvents;
 
     }
+    
+    @PostMapping("/exchange-uet-token")
+    @ResponseBody
+    public String exchangeUetToken(@Valid @RequestBody UetAuthRequest uetAuthRequest) throws Exception {
+    	producerTemplate.start();
+    	String response = producerTemplate.requestBody("direct:uet-exchange-token", uetAuthRequest, String.class);
+    	producerTemplate.stop();
+
+    	return response;
+    }
 }

@@ -22,11 +22,13 @@ public class EventService {
 	public String getEventsFromGGCalendars(ProducerTemplate producerTemplate){
 		
         try {
-        	//UserDetailsImpl userDetails = (UserDetailsImpl) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        	UserDetailsImpl userDetails = (UserDetailsImpl) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
 
         	// retrieve user id
         	producerTemplate.start();
-        	String listEvents = producerTemplate.requestBody("direct:google-calendar", "", String.class);
+        	String listEvents = producerTemplate.requestBodyAndHeader("direct:google-calendar", "", 
+        															"integration_user_id", String.valueOf(userDetails.getId()), 
+        															String.class);
         	producerTemplate.stop();
         	
         	return listEvents;

@@ -27,6 +27,9 @@ public class GoogleAccount {
     @Column(name = "expires_in")
     private Long expiresIn;
 
+    @Column(name = "integration_user_id")
+    private Long integrationUserId;
+    
     @Size(max = 50)
     @Column(name = "token_type")
     private String tokenType;
@@ -47,10 +50,11 @@ public class GoogleAccount {
     	
     }
 
-	public GoogleAccount(Long id, @Size(max = 50) String googleAccount, @Size(max = 250) String token, @Size(max = 120) String refreshToken, Long expiresIn,
+	public GoogleAccount(Long id, Long integrationUserId, @Size(max = 50) String googleAccount, @Size(max = 250) String token, @Size(max = 120) String refreshToken, Long expiresIn,
 			@Size(max = 50) String tokenType, @Size(max = 200) String scope, @Size(max = 120) String code) {
 		super();
 		this.id = id;
+		this.integrationUserId = integrationUserId;
 		this.googleAccount = googleAccount;
 		this.token = token;
 		this.refreshToken = refreshToken;
@@ -122,5 +126,13 @@ public class GoogleAccount {
 
 	public void setCode(String code) {
 		this.code = code;
+	}
+
+	public Long getIntegrationUserId() {
+		return integrationUserId;
+	}
+
+	public void setIntegrationUserId(Long integrationUserId) {
+		this.integrationUserId = integrationUserId;
 	}
 }

@@ -63,11 +63,9 @@ public class GoogleCalendarRoute extends RouteBuilder {
 	}
 	
 	
-	public Calendar init_connection(int user_id) throws Exception {
+	public Calendar init_connection(int integrationUserId) throws Exception {
 		
-		// TODO replace userDetails with user id instead of from security context
-		UserDetailsImpl userDetails = (UserDetailsImpl) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-		Optional<User> user = userRepository.findById((long) user_id);
+		Optional<User> user = userRepository.findById(Long.valueOf(integrationUserId));
 		
 		Optional<GoogleAccount> ga = gaRepository.findById(user.get().getGoogle_id());
 		String accessToken = ga.get().getToken();
@@ -103,11 +101,10 @@ public class GoogleCalendarRoute extends RouteBuilder {
 		
 		from("direct:google-calendar-push-event")
 		.process(e -> {
-//			int user_id = e.getIn().getHeader("user_id", int.class);
-			int user_id = 2;
-			System.out.println("User_id " + user_id);
+			int integrationUserId = (int) e.getIn().getHeader("integration_user_id");
+			
 			System.out.println("START PUSHING EVENT TO CALENDAR");
-			Calendar service = init_connection(user_id);
+			Calendar service = init_connection(integrationUserId);
 			EventsEntity my_event = e.getIn().getBody(EventsEntity.class);
 			
 			Event event = new Event()
@@ -134,18 +131,36 @@ public class GoogleCalendarRoute extends RouteBuilder {
 		from("direct:google-calendar")
 		//.to("direct:google-gmail", "direct:uet-courses-calendar")
 		.process(e -> {
-			int user_id = e.getIn().getBody(int.class);
-			Calendar service = init_connection(user_id);
+			int integrationUserId = (int) e.getIn().getHeader("integration_user_id");
+			Calendar service = init_connection(integrationUserId);
 
 			// List the next 10 events from the primary calendar.
 		    DateTime now = new DateTime(System.currentTimeMillis());
+		    
+		    List<Event> items = new ArrayList<Event>();
+		    
 		    Events events = service.events().list("primary")
 //		            .setMaxResults(30)
 		            .setTimeMin(now)
 		            .setOrderBy("startTime")
 		            .setSingleEvents(true)
 		            .execute();
-		    List<Event> items = events.getItems();
+
+		    while (events.getItems() != null) {
+	            items.addAll(events.getItems());
+	            if (events.getNextPageToken() != null) {
+	                String pageToken = events.getNextPageToken();
+	                events = service.events().list("primary")
+	                		.setTimeMin(now)
+	    		            .setOrderBy("startTime")
+	    		            .setSingleEvents(true)
+	    		            .setPageToken(pageToken)
+	    		            .execute();
+	            } else {
+	                break;
+	            }
+	        }
+		   
 		    List<String> listEvents = new ArrayList<>();
 		    if (items.isEmpty()) {
 		        System.out.println("No upcoming events found.");
