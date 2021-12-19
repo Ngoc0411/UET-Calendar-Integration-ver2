@@ -19,16 +19,16 @@ public class EventService {
 	EventRepository eventRepository;
 
 	
-	public String getEventsFromGGCalendars(ProducerTemplate producerTemplate){
+	public List<EventsEntity> getEventsFromGGCalendars(ProducerTemplate producerTemplate){
 		
         try {
         	UserDetailsImpl userDetails = (UserDetailsImpl) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
 
         	// retrieve user id
         	producerTemplate.start();
-        	String listEvents = producerTemplate.requestBodyAndHeader("direct:google-calendar", "", 
-        															"integration_user_id", String.valueOf(userDetails.getId()), 
-        															String.class);
+        	List<EventsEntity> listEvents = producerTemplate.requestBodyAndHeader("direct:google-calendar", "", 
+        															"integration_user_id", userDetails.getId().intValue(), 
+        															List.class);
         	producerTemplate.stop();
         	
         	return listEvents;

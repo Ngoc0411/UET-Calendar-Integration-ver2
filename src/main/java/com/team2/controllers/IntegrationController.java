@@ -1,6 +1,7 @@
 package com.team2.controllers;
 
 import java.io.IOException;
+import java.util.List;
 
 import javax.validation.Valid;
 
@@ -16,6 +17,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.google.api.client.googleapis.auth.oauth2.GoogleTokenResponse;
+import com.team2.model.EventsEntity;
 import com.team2.model.GoogleAccount;
 import com.team2.model.GoogleAuthToken;
 import com.team2.model.LoginRequest;
@@ -63,10 +65,13 @@ public class IntegrationController {
 
     @PostMapping("/get-calendars-from-google-calendars")
     @ResponseBody
-    public String getEventsFromGGCalendars() {
-    	String listEvents = eventService.getEventsFromGGCalendars(producerTemplate);
-        return listEvents;
-
+    public ResponseEntity<ServiceResult> getEventsFromGGCalendars() {
+    	List<EventsEntity> listEvents = eventService.getEventsFromGGCalendars(producerTemplate);
+    	ServiceResult sr = new ServiceResult();
+    	sr.setData(listEvents);
+    	
+        return sr.getStatus() == ServiceResult.Status.FAILED ? new ResponseEntity<ServiceResult>(sr, HttpStatus.UNAUTHORIZED):
+            new ResponseEntity<ServiceResult>(sr, HttpStatus.OK);
     }
     
     @PostMapping("/exchange-uet-token")
@@ -77,5 +82,15 @@ public class IntegrationController {
     	producerTemplate.stop();
 
     	return response;
+    }
+    
+    @PostMapping("/synchronize-calendars")
+    @ResponseBody
+    public String synchronizeCalendars() throws Exception {
+    	producerTemplate.start();
+    	producerTemplate.requestBody("direct:service-scheduler", "");
+    	producerTemplate.stop();
+
+    	return "";
     }
 }
