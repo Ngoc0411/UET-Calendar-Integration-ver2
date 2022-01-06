@@ -32,12 +32,12 @@ import com.team2.repository.UserRepository;
 import com.team2.security.UserDetailsImpl;
 
 @Component
-public class UetCoursesCalendarRoute extends RouteBuilder {
-	@Autowired
-	EventRepository eventRepository;
-	
+public class UetCoursesCalendarRoute extends RouteBuilder {	
 	@Autowired
 	UserRepository userRepository;
+	
+	@Autowired
+	EventRepository eventRepository;
 
 	@Override
 	public void configure() throws Exception {
@@ -90,8 +90,6 @@ public class UetCoursesCalendarRoute extends RouteBuilder {
 					
 					EventsEntity event = new EventsEntity(eventId, "Deadline: "+ title, _start, _end, 1, integrationUserId.intValue());
 					
-					//save event to database
-					eventRepository.save(event);
 					
 					//add to list
 					listEvents.add(event);

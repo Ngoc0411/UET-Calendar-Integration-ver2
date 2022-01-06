@@ -159,9 +159,6 @@ public class GmailRoute extends RouteBuilder {
 		                		formatTime(end_time, -1), formatTime(end_time, 0),
 		                		2, integrationUserId.intValue());
 		                
-		                //save event to database
-						eventRepository.save(event);
-		                
 		                listEvents.add(event);
 		                // push to calendar
 		            }

@@ -32,6 +32,7 @@ import com.team2.model.EventsEntity;
 import com.team2.model.GoogleAccount;
 import com.team2.model.MyEvent;
 import com.team2.model.User;
+import com.team2.repository.EventRepository;
 import com.team2.repository.GoogleAccountRepository;
 import com.team2.repository.UserRepository;
 import com.team2.security.UserDetailsImpl;
@@ -41,6 +42,9 @@ public class GoogleCalendarRoute extends RouteBuilder {
 	
 	@Autowired
 	GoogleAccountRepository gaRepository;
+	
+	@Autowired
+	EventRepository eventRepository;
 	
 	@Autowired
     UserRepository userRepository;
@@ -124,6 +128,9 @@ public class GoogleCalendarRoute extends RouteBuilder {
 			
 			String calendarId = "primary";
 			event = service.events().insert(calendarId, event).execute();
+			
+			//save event to database
+			eventRepository.save(my_event);
 			
 		}).to("log:com.team2.routes?level=INFO");
 	
