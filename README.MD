@@ -1,5 +1,7 @@
 ## Các bước để có thể chạy chương trình:
 
+![image](https://user-images.githubusercontent.com/55309128/148739040-37ff9443-4f63-4010-8b53-e5ac621c49e2.png)
+
 Docs: https://drive.google.com/drive/folders/10NJvz2xErLEeGMYUXACltZFDuI2XaAdQ?usp=sharing
 
 1. Tạo cơ sở dữ liệu (Câu lệnh tạo bảng ở Docs trên)
