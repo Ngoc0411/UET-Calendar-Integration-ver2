@@ -4,7 +4,7 @@
 #### Install Java JDK 8
     • Bước 1: Vào website download của Oracle theo link sau: https://www.oracle.com/java/technologies/downloads/#java8
     • Bước 2: Chọn hệ điều hành và file cấu hình phù hợp với máy tính và download
-![image](https://user-images.githubusercontent.com/55309128/148740034-3b001003-74aa-45df-b1df-245fc09ffea3.png)
+    ![image](https://user-images.githubusercontent.com/55309128/148740034-3b001003-74aa-45df-b1df-245fc09ffea3.png)
 
     • Bước 3: Run file vừa download về.
 #### Install Java JDK 11
