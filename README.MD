@@ -1,21 +1,21 @@
 ## Cài đặt và cấu hình
-### Cài đặt Java runtimes
+### 1.Cài đặt Java runtimes
 Để chạy Fuse Tooling với phiên bản CodeReady Studio mới nhất, cần cài đặt cả Java 8 và Java 11 trên máy cục bộ của mình. Java 8 JVM là bắt buộc để khởi chạy các ứng dụng nhắm mục tiêu Fuse trên Karaf và Java 11 JVM là bắt buộc để chạy CodeReady Studio.
-#### Install Java JDK 8
+#### 1.1 Install Java JDK 8
     • Bước 1: Vào website download của Oracle theo link sau: https://www.oracle.com/java/technologies/downloads/#java8
     • Bước 2: Chọn hệ điều hành và file cấu hình phù hợp với máy tính và download
     ![image](https://user-images.githubusercontent.com/55309128/148740034-3b001003-74aa-45df-b1df-245fc09ffea3.png)
 
     • Bước 3: Run file vừa download về.
-#### Install Java JDK 11
+#### 1.2 Install Java JDK 11
     • Bước 1: Vào website download của Oracle theo link sau: https://www.oracle.com/java/technologies/downloads/#java11
     • Bước 2: Chọn hệ điều hành và file cấu hình phù hợp với máy tính và download.
 ![image](https://user-images.githubusercontent.com/55309128/148740214-c9bd586a-5ac5-41ce-b68b-6b177766d193.png)
 
     • Bước 3: Run file vừa download về.
-### Cài đặt Fuse on Karaf
+### 1.3 Cài đặt Fuse on Karaf
 Với dự án này, nhóm sử dụng phiên bản Fuse 7.9 on Karaf. Gói cài đặt tiêu chuẩn của Fuse 7.9 on Karaf có sẵn trên Red Hat Customer Portal, từ đây bạn có thể tải xuống.
-#### Đăng ký tài khoản trên Red Hat Customer Portal.
+#### 1.3.1 Đăng ký tài khoản trên Red Hat Customer Portal.
     • Bước 1: Truy cập vào trang web Red Hat Customer Portal
 ![image](https://user-images.githubusercontent.com/55309128/148740270-9a23b0aa-3f60-4e99-8c9f-804b14b2a5a4.png)
 
@@ -23,10 +23,10 @@ Với dự án này, nhóm sử dụng phiên bản Fuse 7.9 on Karaf. Gói cài
 ![image](https://user-images.githubusercontent.com/55309128/148740305-8f221062-bd28-452c-9440-65b1c64d0d40.png)
 
     • Bước 3: Sau khi đăng ký xong thì truy cập vào trang web Red Hat Customer Portal bằng tài khoản vừa đăng ký.
-#### Download CodeReady Studio installer và Fuse on Karaf installer
+#### 1.3.2 Download CodeReady Studio installer và Fuse on Karaf installer
     • Bước 1: download CodeReady Studio installer.
     • Bước 2: download Fuse on Karaf installer.
-#### Cài đặt cấu hình
+#### 1.3.3 Cài đặt cấu hình
     • Bước 1: Giải nén tập dữ liệu .zip vừa tải xuống cho Fuse on Apache Karaf vào một vị trí thuận tiện trên hệ thống tệp, FUSE_INSTALL.
     • Bước 2: Thêm người dùng quản trị viên vào Fuse runtime.
         ◦ Mở file FUSE_INSTALL/etc/users.properties trong một trình soạn thảo văn bản.
@@ -65,3 +65,26 @@ Với dự án này, nhóm sử dụng phiên bản Fuse 7.9 on Karaf. Gói cài
         ◦ Di chuyển tới Window→Preferences→Java→Compiler. Trong JDK Compliance, đặt Compiler Compliance level thành 1.8. Nhấn vào Apply and Close.
 ![image](https://user-images.githubusercontent.com/55309128/148740527-1a34cd15-3315-4426-9436-639f74530663.png)
 
+### 2. Download source code
+#### 2.1 Cài đặt Front-end:
+    git clone https://github.com/Neko1122000/Intergate_FE.git
+    cd Intergate_FE
+    npm install
+    npm run build
+Tại đây, folder build được tạo ra chứa code react được chuẩn hoá lại dưới dạng file html tối ưu cho việc triển khai
+#### 2.2 Cài đặt Back-end:
+    git clone https://github.com/Ngoc0411/UET-Calendar-Integrationver2.git
+Tạo project mới để run:
+- Cài đặt đầy đủ cấu hình cần thiết như trên
+- Mở Redhat CodeReady Studio, chọn File -> Open Projects from File System 
+- Nhập đường dẫn đến folder git vừa tải xuống và chọn Finish
+![img_8.png](img_8.png)
+- Click chuột phải vào project vừa mở, chọn Maven -> Update Project để đồng bộ lại
+- Sao chép folder Build trong folder Integrate_FE vào thư mục
+  target/classes/public
+
+### 3. Run Server
+- Chọn src/main/java -> com.team2 -> run file Application.java với
+  Java Application
+![img_7.png](img_7.png)
+Chương trình được chạy trên localhost:8080
