@@ -11,9 +11,9 @@
     • Bước 2: Chọn hệ điều hành và file cấu hình phù hợp với máy tính và download.
 
     • Bước 3: Run file vừa download về.
-        5.2.  Cài đặt Fuse on Karaf
+### Cài đặt Fuse on Karaf
 Với dự án này, nhóm sử dụng phiên bản Fuse 7.9 on Karaf. Gói cài đặt tiêu chuẩn của Fuse 7.9 on Karaf có sẵn trên Red Hat Customer Portal, từ đây bạn có thể tải xuống.
-            5.2.1. Đăng ký tài khoản trên Red Hat Customer Portal.
+#### Đăng ký tài khoản trên Red Hat Customer Portal.
     • Bước 1: Truy cập vào trang web Red Hat Customer Portal
 
     • Bước 2: Lựa chọn phần “Register” trên góc phải trang web để đăng ký tài khoản. Sau đó điền đầy đủ thông tin và ấn “Create my account”.
@@ -22,7 +22,7 @@ Với dự án này, nhóm sử dụng phiên bản Fuse 7.9 on Karaf. Gói cài
             5.2.2. Download CodeReady Studio installer và Fuse on Karaf installer
     • Bước 1: download CodeReady Studio installer.
     • Bước 2: download Fuse on Karaf installer.
-            5.2.3. Cài đặt cấu hình
+#### Cài đặt cấu hình
     • Bước 1: Giải nén tập dữ liệu .zip vừa tải xuống cho Fuse on Apache Karaf vào một vị trí thuận tiện trên hệ thống tệp, FUSE_INSTALL.
     • Bước 2: Thêm người dùng quản trị viên vào Fuse runtime.
         ◦ Mở file FUSE_INSTALL/etc/users.properties trong một trình soạn thảo văn bản.
@@ -52,7 +52,3 @@ Với dự án này, nhóm sử dụng phiên bản Fuse 7.9 on Karaf. Gói cài
         ◦ Trong Installed JREs, chọn Java 8 runtime và ấn Apply.
 
         ◦ Di chuyển tới Window→Preferences→Java→Compiler. Trong JDK Compliance, đặt Compiler Compliance level thành 1.8. Nhấn vào Apply and Close.
-
-    6. Tích hợp các dịch vụ
-        6.1.  Phạm vi người dùng
-Hệ thống tích hợp thời gian biểu hướng tới phục vụ tất cả các sinh viên Trường Đại học Công nghệ - Đại học Quốc gia Hà Nội. Để đảm bảo đáp ứng được, dữ liệu người dùng và token đăng nhập sẽ được lưu lại trong cơ sở dữ liệu để quản lý và cá nhân hóa hành động cho từng đối tượng.
