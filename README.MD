@@ -1,7 +1,7 @@
-    5. Cài đặt và cấu hình
-        5.1.  Cài đặt Java runtimes
-Để chạy Fuse Tooling với phiên bản CodeReady Studio mới nhất, cần cài đặt cả Java 8 và Java 11 trên máy cục bộ của mình. Java 8 JVM là bắt buộc để khởi chạy các ứng dụng nhắm mục tiêu Fuse trên Karaf và Java 11 JVM là bắt buộc để chạy CodeReady Studio.
-            5.1.1. Install Java JDK 8
+## Cài đặt và cấu hình
+### Cài đặt Java runtimes
+    Để chạy Fuse Tooling với phiên bản CodeReady Studio mới nhất, cần cài đặt cả Java 8 và Java 11 trên máy cục bộ của mình. Java 8 JVM là bắt buộc để khởi chạy các ứng dụng nhắm mục tiêu Fuse trên Karaf và Java 11 JVM là bắt buộc để chạy CodeReady Studio.
+#### Install Java JDK 8
     • Bước 1: Vào website download của Oracle theo link sau: https://www.oracle.com/java/technologies/downloads/#java8
     • Bước 2: Chọn hệ điều hành và file cấu hình phù hợp với máy tính và download
 
